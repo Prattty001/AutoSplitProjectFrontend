@@ -10,8 +10,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    // ✅ Clear token / user data
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // ✅ Redirect to login
+    navigate("/login");
+  };
+
   return (
     <header className="h-16 flex items-center justify-between px-6 border-b bg-card shadow-soft">
       {/* Left Section */}
@@ -48,12 +60,15 @@ export const Navbar = () => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <Settings className="w-4 h-4 mr-2" />
               Settings
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={handleSignOut}
+            >
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
