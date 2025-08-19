@@ -1,43 +1,56 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import BudgetPlanner from "./pages/BudgetPlanner";
-import SmartSuggestions from "./pages/SmartSuggestions";
 import TeamSharing from "./pages/TeamSharing";
-import BankIntegration from "./pages/BankIntegration";
-import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
-const queryClient = new QueryClient();
+function App() {
+  return (
+    <Router>
+      {/* Toast notifications (global) */}
+      <Toaster />
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        {/* ✅ UI providers */}
-        <Toaster />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
-        {/* ✅ Routes */}
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/budget" element={<BudgetPlanner />} />
-          <Route path="/suggestions" element={<SmartSuggestions />} />
-          <Route path="/team" element={<TeamSharing />} />
-          <Route path="/banks" element={<BankIntegration />} />
-          {/* Catch-all */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+        {/* Protected routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/budget-planner"
+          element={
+            <ProtectedRoute>
+              <BudgetPlanner />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teamsharing"
+          element={
+            <ProtectedRoute>
+              <TeamSharing />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Default route → redirect to login */}
+        <Route path="*" element={<Login />} />
+      </Routes>
+    </Router>
+  );
+}
 
 export default App;

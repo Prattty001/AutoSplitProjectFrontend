@@ -2,7 +2,7 @@ import React from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { CreditCard, Bell, Settings } from 'lucide-react';
+import { CreditCard, Bell } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -20,8 +21,20 @@ export const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    // ✅ Redirect to login
-    navigate("/login");
+    // ✅ Show toast
+    toast.success("Logged out successfully!", {
+      position: "top-center",
+      style: {
+        background: "#10B981", // green
+        color: "white",
+        fontWeight: "bold",
+      },
+    });
+
+    // ✅ Redirect to login after short delay
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
   };
 
   return (
@@ -60,10 +73,6 @@ export const Navbar = () => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-56">
-            {/* <DropdownMenuItem>
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-destructive"

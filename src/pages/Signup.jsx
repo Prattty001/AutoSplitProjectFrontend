@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import {
   Eye,
   EyeOff,
@@ -21,12 +20,12 @@ import {
   Lock,
   LockKeyhole,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -39,9 +38,13 @@ const Signup = () => {
     const confirmPassword = e.target.confirmPassword.value;
 
     if (password !== confirmPassword) {
-      toast({
-        title: "Passwords do not match",
-        variant: "destructive",
+      toast.error("❌ Passwords do not match", {
+        position: "top-center",
+        style: {
+          background: "#ef4444",
+          color: "#fff",
+          fontWeight: "600",
+        },
       });
       setLoading(false);
       return;
@@ -55,24 +58,34 @@ const Signup = () => {
       });
 
       if (response.ok) {
-        toast({
-          title: "Account created!",
-          description: "Welcome to AutoSplit. Please log in.",
+        toast.success("✅ Signed up successfully! Please log in.", {
+          position: "top-center",
+          style: {
+            background: "#22c55e",
+            color: "#fff",
+            fontWeight: "600",
+          },
         });
-        navigate("/login"); // ✅ go to login after signup
+        navigate("/login");
       } else {
         const err = await response.json();
-        toast({
-          title: "Signup failed",
-          description: err.message || "Something went wrong",
-          variant: "destructive",
+        toast.error(err.message || "❌ Signup failed", {
+          position: "top-center",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+            fontWeight: "600",
+          },
         });
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
+      toast.error("Something went wrong. Please try again.", {
+        position: "top-center",
+        style: {
+          background: "#ef4444",
+          color: "#fff",
+          fontWeight: "600",
+        },
       });
     } finally {
       setLoading(false);

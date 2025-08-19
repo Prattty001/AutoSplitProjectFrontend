@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, CreditCard } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Eye, EyeOff, CreditCard } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -33,26 +39,36 @@ const Login = () => {
       if (res.ok) {
         // ✅ Save token to localStorage
         localStorage.setItem("token", data.token);
-
-        toast({
-          title: "Welcome back!",
-          description: data.message || "Successfully logged in to AutoSplit.",
+        localStorage.setItem("userId", data.userid);
+        toast.success("✅ Logged in successfully!", {
+          position: "top-center",
+          style: {
+            background: "#22c55e", // green-500
+            color: "#fff",
+            fontWeight: "600",
+          },
         });
 
         // ✅ Redirect to dashboard
         navigate("/dashboard");
       } else {
-        toast({
-          title: "Login failed",
-          description: data.message || "Invalid email or password",
-          variant: "destructive",
+        toast.error( " Invalid email or password", {
+          position: "top-center",
+          style: {
+            background: "#ef4444", // red-500
+            color: "#fff",
+            fontWeight: "600",
+          },
         });
       }
     } catch (err) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
+      toast.error("Invalid email or password", {
+        position: "top-center",
+        style: {
+          background: "#ef4444",
+          color: "#fff",
+          fontWeight: "600",
+        },
       });
     } finally {
       setLoading(false);
@@ -70,7 +86,9 @@ const Login = () => {
           <h1 className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
             AutoSplit
           </h1>
-          <p className="text-muted-foreground">Smart Income Planner & Budget Tool</p>
+          <p className="text-muted-foreground">
+            Smart Income Planner & Budget Tool
+          </p>
         </div>
 
         {/* Login Form */}
